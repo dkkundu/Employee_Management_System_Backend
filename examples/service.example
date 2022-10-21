@@ -1,0 +1,17 @@
+[Unit]
+Description=EMS-uWSGI-instance
+After=network.target postgresql-11.service
+
+[Service]
+User=centos
+Group=nginx
+WorkingDirectory=/opt/EMS
+Environment="PATH=/opt/EMS/venv/bin"
+ExecStart=/opt/EMS/venv/bin/uwsgi --ini /opt/EMS/uwsgi/uwsgi.ini
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target
