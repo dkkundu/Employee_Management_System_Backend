@@ -28,6 +28,25 @@ urlpatterns = [
     path('auth/login/', views.ObtainTokenView.as_view(), name='auth-login'),
     path('auth/logout/', views.LogoutView.as_view(), name='auth-logout'),
 
+
+    path(
+        'employee/profile/<int:pk>/', views.EmployeeProfileView.as_view(),
+        name='profile'
+    ),
+    path(
+        'employee/list/', views.EmployeeListView.as_view(),
+        name='employee_list'
+    ),
+    path(
+        'employee/update/<int:pk>/', views.EmployeeProfileUpdateView.as_view(),
+        name='employee_update'
+    ),
+    path(
+        'employee/create/', views.EmployeeCreateView.as_view(),
+        name='employee_create'
+    ),
+
+
     # router ------------------------------------------------------------------
     path('', include(router.urls)),
 ]

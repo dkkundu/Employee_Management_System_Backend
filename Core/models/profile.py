@@ -13,6 +13,7 @@ from django.utils.translation import gettext_lazy as _
 from Core.models import User
 # PROMETHEUS IMPORTS
 from django_prometheus.models import ExportModelOperationsMixin
+from utilities.models import AbstractAddress, UserAbstractProfile
 
 
 logger = logging.getLogger(__name__)
@@ -27,30 +28,22 @@ def media_upload_path(instance, filename):
     return path
 
 
-class Profile(ExportModelOperationsMixin('profile'), models.Model):
+class Profile(
+    ExportModelOperationsMixin('profile'), AbstractAddress,
+    UserAbstractProfile
+):
     """User Profile model"""
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, primary_key=True, unique=True
     )
-    image = models.ImageField(
-        _('Profile Picture'), blank=True, null=True,
-        upload_to=media_upload_path
-    )
-    bio = models.TextField(
-        _('Bio'), blank=True, null=True
-    )
     website = models.URLField(
         _('Website'), blank=True, null=True
     )
-    birthday = models.DateField(
-        _('Date of Birth'), blank=True, null=True
-    )
-    gender = models.CharField(
-        _('Gender'), max_length=1, blank=True, null=True,
-        choices=[('M', 'Male'), ('F', 'Female')]
-    )
     spouse_name = models.CharField(
         _('Name of Spouse'), max_length=255, blank=True, null=True
+    )
+    designation = models.CharField(
+        _('Designation'), max_length=700, blank=True, null=True
     )
     father_name = models.CharField(
         _('Name of Father'), max_length=255, blank=True, null=True
@@ -71,21 +64,6 @@ class Profile(ExportModelOperationsMixin('profile'), models.Model):
             r'^[A-Z]{2}\d{7}$',
             message='Alphanumeric 9 characters (ex: PA3456789)'
         )]
-    )
-    address = models.CharField(
-        _('Street Address'), max_length=255, blank=True, null=True
-    )
-    thana = models.CharField(
-        _('Thana'), max_length=255, blank=True, null=True
-    )
-    district = models.CharField(
-        _('District'), max_length=255, blank=True, null=True
-    )
-    division = models.CharField(
-        _('Division'), max_length=255, blank=True, null=True
-    )
-    postal = models.CharField(
-        _('Postal Code'), max_length=4, blank=True, null=True
     )
     is_active = models.BooleanField(
         _('Active'), default=True, null=True
